@@ -1,115 +1,16 @@
-import { Link, useNavigate } from "react-router-dom";
-import { CgSpinner } from "react-icons/cg";
-import { HiInformationCircle } from "react-icons/hi";
-import { Alert, Button, Label, TextInput, Toast } from "flowbite-react";
-import { useState } from "react";
+import Form from "../components/signup/Form";
+import Greeting from "../components/signup/Greeting";
 
 export default function SignUp() {
-  const [formData, setFormData] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null);
-  const navigate = useNavigate();
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!formData.username || !formData.email || !formData.password) {
-      setErrorMessage("Please fill the all fields");
-      return;
-    }
-    try {
-      setIsLoading(true);
-      const res = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-      const data = await res.json();
-      !data.success && setErrorMessage(data.message);
-      res.ok && navigate("/sign-in");
-    } catch (error) {
-      setErrorMessage(error.message);
-      setIsLoading(false);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
-  };
-
   return (
     <div className="mt-20 min-h-screen">
       <div className="flex flex-col md:flex-row md:items-center max-w-3xl p-3 mx-auto md:space-x-4">
         <div className="flex-1">
-          <Link to="/" className="text-4xl font-bold dark:text-white">
-            <span className="text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg px-1">
-              Reactive
-            </span>
-            Blog
-          </Link>
-
-          <p className="text-sm mt-5">
-            Welcome to Reactive Blog, have fun reading awesome blogs.
-          </p>
+          <Greeting />
         </div>
 
         <div className="flex-1">
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-2">
-            <div>
-              <Label value="Username" className="font-bold" />
-              <TextInput
-                type="text"
-                placeholder="Username"
-                id="username"
-                name="username"
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <Label value="Email" className="font-bold" />
-              <TextInput
-                type="email"
-                placeholder="name@domain.com"
-                id="email"
-                name="email"
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <Label value="Password" className="font-bold" />
-              <TextInput
-                type="password"
-                placeholder="Password"
-                id="password"
-                name="password"
-                onChange={handleChange}
-              />
-            </div>
-            <Button
-              disabled={isLoading}
-              gradientDuoTone="purpleToPink"
-              type="submit"
-            >
-              {isLoading ? <CgSpinner className="animate-spin" /> : "Sign Up"}
-            </Button>
-          </form>
-          <div className="flex text-sm mt-5 gap-1">
-            <span>Have an account?</span>
-            <Link className=" text-teal-500" to="/sign-in">
-              Sign In
-            </Link>
-          </div>
-          {errorMessage && (
-            <Alert
-              onDismiss={() => setErrorMessage(null)}
-              icon={HiInformationCircle}
-              className="mt-5"
-              color="failure"
-            >
-              {errorMessage}
-            </Alert>
-          )}
+          <Form />
         </div>
       </div>
     </div>
