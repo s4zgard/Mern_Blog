@@ -1,36 +1,41 @@
 import { Link, useNavigate } from "react-router-dom";
-import { CgSpinner } from "react-icons/cg";
 import { HiInformationCircle } from "react-icons/hi";
 import { Alert, Button, Label, TextInput, Spinner } from "flowbite-react";
+import { signInFailure, signInLoading, signInSuccess } from "../store";
+import { useDispatch, useSelector, useStore } from "react-redux";
 import { useState } from "react";
 
 export default function SignInForm() {
+  const { isLoading, error: errorMessage } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.email || !formData.password) {
-      setErrorMessage("Please fill the all fields");
+      dispatch(signInFailure("Please fill the all fields"));
       return;
     }
     try {
-      setIsLoading(true);
+      dispatch(signInLoading());
       const res = await fetch("/api/auth/signin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      !data.success && setErrorMessage(data.message);
-      res.ok && navigate("/");
+      if (data.success === false) {
+        dispatch(signInFailure(data.message));
+        return;
+      }
+      if (res.ok) {
+        dispatch(signInSuccess(data));
+        navigate("/");
+        return;
+      }
     } catch (error) {
-      setErrorMessage(error.message);
-      setIsLoading(false);
-    } finally {
-      setIsLoading(false);
+      dispatch(signInFailure(error.message));
     }
   };
 
