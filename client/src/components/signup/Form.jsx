@@ -3,6 +3,7 @@ import { CgSpinner } from "react-icons/cg";
 import { HiInformationCircle } from "react-icons/hi";
 import { Alert, Button, Label, TextInput, Spinner } from "flowbite-react";
 import { useState } from "react";
+import OAuth from "../OAuth";
 
 export default function Form() {
   const [formData, setFormData] = useState({});
@@ -84,6 +85,7 @@ export default function Form() {
             "Sign Up"
           )}
         </Button>
+        <OAuth />
       </form>
       <div className="flex text-sm mt-5 gap-1">
         <span>Have an account?</span>
