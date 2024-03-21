@@ -9,8 +9,11 @@ import {
   signInFailure,
 } from "./slices/userSlice";
 
+import { themeReducer, toggleTheme } from "./slices/themSlice";
+
 const rootReducer = combineReducers({
   user: userReducer,
+  theme: themeReducer,
 });
 
 const persistConfig = {
@@ -29,5 +32,5 @@ export const store = configureStore({
     }),
 });
 
-export { signInLoading, signInSuccess, signInFailure };
+export { signInLoading, signInSuccess, signInFailure, toggleTheme };
 export const persistor = persistStore(store);
