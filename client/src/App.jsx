@@ -2,6 +2,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Root from "./pages/Root";
 import About from "./pages/About";
 import Dashboard from "./pages/Dashboard";
+import PrivateRoute from "./components/PrivateRoute";
 import Home from "./pages/Home";
 import Projects from "./pages/Projects";
 import SignIn from "./pages/SignIn";
@@ -21,8 +22,18 @@ const router = createBrowserRouter([
         path: "/about",
       },
       {
-        element: <Dashboard />,
-        path: "/dashboard",
+        element: <PrivateRoute />,
+        children: [
+          {
+            element: <Dashboard />,
+            path: "/dashboard",
+            loader: ({ request }) => {
+              const { searchParams } = new URL(request.url);
+              const tab = searchParams.get("tab");
+              return tab;
+            },
+          },
+        ],
       },
       {
         element: <Projects />,

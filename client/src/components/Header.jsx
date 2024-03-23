@@ -41,33 +41,34 @@ export default function Header() {
         >
           {theme === "dark" ? <FaSun /> : <FaMoon />}
         </Button>
-        <Link to="/sign-in">
-          {currentUser ? (
-            <Dropdown
-              arrowIcon={false}
-              inline
-              label={
-                <Avatar alt="user" img={currentUser.profilePicture} rounded />
-              }
-            >
-              <Dropdown.Header className="cursor-default">
-                <span className="text-sm block">@{currentUser.username}</span>
-                <span className="text-sm font-semibold block truncate">
-                  {currentUser.email}
-                </span>
-              </Dropdown.Header>
-              <Link to="/dashboard?tab=profile">
-                <Dropdown.Item>Profile</Dropdown.Item>
-              </Link>
-              <Dropdown.Divider />
-              <Dropdown.Item>Sign Out </Dropdown.Item>
-            </Dropdown>
-          ) : (
+
+        {currentUser ? (
+          <Dropdown
+            arrowIcon={false}
+            inline
+            label={
+              <Avatar alt="user" img={currentUser.profilePicture} rounded />
+            }
+          >
+            <Dropdown.Header className="cursor-default">
+              <span className="text-sm block">@{currentUser.username}</span>
+              <span className="text-sm font-semibold block truncate">
+                {currentUser.email}
+              </span>
+            </Dropdown.Header>
+            <Link to="/dashboard?tab=profile">
+              <Dropdown.Item>Profile</Dropdown.Item>
+            </Link>
+            <Dropdown.Divider />
+            <Dropdown.Item>Sign Out </Dropdown.Item>
+          </Dropdown>
+        ) : (
+          <Link to="/sign-in">
             <Button className="h-10" outline gradientDuoTone="purpleToBlue">
               Sign In
             </Button>
-          )}
-        </Link>
+          </Link>
+        )}
         <Navbar.Toggle />
       </div>
       <Navbar.Collapse>
