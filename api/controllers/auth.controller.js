@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 
 export const signup = async (req, res, next) => {
   const { username, password, email } = req.body;
-
+  const checkUser = await User.findOne({ $or: [{ email }, { username }] });
   if (
     !username ||
     !password ||
@@ -16,10 +16,19 @@ export const signup = async (req, res, next) => {
   ) {
     next(errorHandler(400, "All Fields are required"));
   }
-
+  if (password.length < 8)
+    return next(errorHandler(400, "Password must be more than 8 characters."));
+  if (checkUser && email === checkUser.email)
+    return next(errorHandler(400, `Email already exists`));
+  if (checkUser && username === checkUser.username)
+    return next(errorHandler(400, `Username already exists`));
   const hashedPassword = bcryptjs.hashSync(password, 10);
 
-  const newUser = new User({ username, email, password: hashedPassword });
+  const newUser = new User({
+    username: username.toLowerCase(),
+    email,
+    password: hashedPassword,
+  });
   try {
     await newUser.save();
     res.json({ message: "Signup was successfull" });
@@ -36,14 +45,14 @@ export const signin = async (req, res, next) => {
   try {
     const loggedInUser = await User.findOne({ email });
     if (!loggedInUser) {
-      return next(errorHandler(400, "Invalid Email/Password"));
+      return next(errorHandler(400, "Invalid Email or Password"));
     }
     const loggedInPassword = bcryptjs.compareSync(
       password,
       loggedInUser.password
     );
     if (!loggedInPassword) {
-      return next(errorHandler(400, "Invalid Email/Password"));
+      return next(errorHandler(400, "Invalid Email or Password"));
     }
 
     const { password: uPass, ...rest } = loggedInUser._doc;
@@ -61,6 +70,7 @@ export const signin = async (req, res, next) => {
     next(error);
   }
 };
+
 export const google = async (req, res, next) => {
   const { name, email, googlePhotoUrl } = req.body;
   try {

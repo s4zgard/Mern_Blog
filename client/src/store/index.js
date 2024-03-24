@@ -6,7 +6,7 @@ import {
   userReducer,
   signInLoading,
   signInSuccess,
-  signInFailure,
+  signInFailure,userUpdateStart,userUpdateFailure,userUpdateSuccess
 } from "./slices/userSlice";
 
 import { themeReducer, toggleTheme } from "./slices/themSlice";
@@ -32,5 +32,5 @@ export const store = configureStore({
     }),
 });
 
-export { signInLoading, signInSuccess, signInFailure, toggleTheme };
+export { signInLoading, signInSuccess, signInFailure, toggleTheme,userUpdateStart,userUpdateFailure,userUpdateSuccess };
 export const persistor = persistStore(store);

@@ -1,6 +1,6 @@
-import { Alert, Button, TextInput } from "flowbite-react";
+import { Alert, Button, Spinner, TextInput } from "flowbite-react";
 import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import {
   getDownloadURL,
   getStorage,
@@ -11,13 +11,18 @@ import { app } from "../firebase";
 import { CircularProgressbar } from "react-circular-progressbar";
 import { GoUpload } from "react-icons/go";
 import "react-circular-progressbar/dist/styles.css";
+import {userUpdateStart,userUpdateFailure,userUpdateSuccess} from '../store'
 
 export default function DashProfile() {
-  const { currentUser } = useSelector((state) => state.user);
+    const dispatch = useDispatch();
+  const { currentUser,isLoading } = useSelector((state) => state.user);
+  const [showPassForm, setShowPassForm] = useState(false);
+  const [updatedData, setUpdatedData] = useState({});
   const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(null);
   const [uploadError, setUploadError] = useState(null);
+  const [formData, setFormData] = useState({});
   const imageRef = useRef();
 
   const handleUpload = (e) => {
@@ -36,6 +41,36 @@ export default function DashProfile() {
       uploadImage();
     }
   }, [image]);
+
+
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (Object.keys(formData).length === 0) return;
+    dispatch(userUpdateStart())
+    try {
+      const res = await fetch(`/api/user/update/${currentUser._id}`, {
+        method: "PUT",
+        headers: {
+    'Content-Type': 'application/json'
+  },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (!res.ok ) {
+        dispatch(userUpdateFailure(data.message))
+      }else{
+        dispatch(userUpdateSuccess(data))
+    };
+    } catch (error) {
+      dispatch(userUpdateFailure(error.message));
+    }
+  };
 
   const uploadImage = async () => {
     const storage = getStorage(app);
@@ -59,6 +94,7 @@ export default function DashProfile() {
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           setImageUrl(downloadURL);
+          setFormData({ ...formData, profilePicture: downloadURL });
         });
       }
     );
@@ -67,7 +103,7 @@ export default function DashProfile() {
   return (
     <div className="max-w-lg mx-auto w-full p-3">
       <h1 className="my-8 font-semibold text-center text-3xl">Profile</h1>
-      <form className="mb-4 flex flex-col gap-4">
+      <form className="mb-4 flex flex-col gap-4" onSubmit={handleSubmit}>
         <input
           hidden
           type="file"
@@ -106,22 +142,30 @@ export default function DashProfile() {
           type="text"
           id="username"
           placeholder="username"
-          defaultValue={currentUser.username}
+          defaultValue={updatedData.username || currentUser.username}
+          onChange={handleChange}
         />
         <TextInput
           type="email"
           id="email"
           placeholder="email"
-          defaultValue={currentUser.email}
+          defaultValue={updatedData.email || currentUser.email}
+          onChange={handleChange}
         />
-        <TextInput type="password" id="password" placeholder="password" />
+        <span className="cursor-pointer text-xs underline" onClick={()=>setShowPassForm(!showPassForm)}>Change Password</span>
+       {showPassForm && <TextInput
+                 type="password"
+                 id="password"
+                 placeholder="password"
+                 onChange={handleChange}
+               />}
         <Button
-          disabled={uploadError}
+          disabled={uploadError || isLoading}
           type="submit"
           gradientDuoTone="purpleToBlue"
           outline
         >
-          Update
+          {isLoading ? <> <Spinner size="sm" /> <span className="pl-3">Updating...</span></> : "Update"}
         </Button>
         <div className="flex justify-between mt-4 text-red-500">
           <span className="cursor-pointer">Delete Account</span>

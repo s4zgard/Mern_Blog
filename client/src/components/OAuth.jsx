@@ -17,7 +17,6 @@ export default function OAuth() {
       const { displayName, email: gMail, photoURL } = resFromGoogle.user;
       const res = await fetch("/api/auth/google", {
         method: "POST",
-        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
