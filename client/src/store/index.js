@@ -3,10 +3,23 @@ import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
 import {
+  setUsername,
+  setEmail,
+  setPassword,
+  setCurrentPassword,
+  setProfilePicture,
+  clearForm,
+  formReducer,
+} from "./slices/formSlice";
+
+import {
   userReducer,
   signInLoading,
   signInSuccess,
-  signInFailure,userUpdateStart,userUpdateFailure,userUpdateSuccess
+  signInFailure,
+  userUpdateStart,
+  userUpdateFailure,
+  userUpdateSuccess,
 } from "./slices/userSlice";
 
 import { themeReducer, toggleTheme } from "./slices/themSlice";
@@ -14,6 +27,7 @@ import { themeReducer, toggleTheme } from "./slices/themSlice";
 const rootReducer = combineReducers({
   user: userReducer,
   theme: themeReducer,
+  form: formReducer,
 });
 
 const persistConfig = {
@@ -32,5 +46,19 @@ export const store = configureStore({
     }),
 });
 
-export { signInLoading, signInSuccess, signInFailure, toggleTheme,userUpdateStart,userUpdateFailure,userUpdateSuccess };
+export {
+  signInLoading,
+  signInSuccess,
+  signInFailure,
+  toggleTheme,
+  userUpdateStart,
+  userUpdateFailure,
+  userUpdateSuccess,
+  setUsername,
+  setEmail,
+  setPassword,
+  setCurrentPassword,
+  setProfilePicture,
+  clearForm,
+};
 export const persistor = persistStore(store);

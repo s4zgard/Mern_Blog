@@ -11,18 +11,23 @@ import { app } from "../firebase";
 import { CircularProgressbar } from "react-circular-progressbar";
 import { GoUpload } from "react-icons/go";
 import "react-circular-progressbar/dist/styles.css";
-import {userUpdateStart,userUpdateFailure,userUpdateSuccess} from '../store'
+import {
+  userUpdateStart,
+  userUpdateFailure,
+  userUpdateSuccess,
+} from "../store";
 
 export default function DashProfile() {
-    const dispatch = useDispatch();
-  const { currentUser,isLoading } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const { currentUser, isLoading, error } = useSelector((state) => state.user);
   const [showPassForm, setShowPassForm] = useState(false);
-  const [updatedData, setUpdatedData] = useState({});
   const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(null);
   const [uploadError, setUploadError] = useState(null);
   const [formData, setFormData] = useState({});
+  const [updateSuccess, setUpdateSuccess] = useState(null);
+  const [updateError, setUpdateError] = useState(null);
   const imageRef = useRef();
 
   const handleUpload = (e) => {
@@ -42,31 +47,33 @@ export default function DashProfile() {
     }
   }, [image]);
 
-
-
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (Object.keys(formData).length === 0) return;
-    dispatch(userUpdateStart())
+    if (formData.username === "" || !formData.email === "") {
+      return;
+    }
+    if (Object.keys(formData).length === 0 || !formData) return;
+    dispatch(userUpdateStart());
     try {
       const res = await fetch(`/api/user/update/${currentUser._id}`, {
         method: "PUT",
         headers: {
-    'Content-Type': 'application/json'
-  },
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      if (!res.ok ) {
-        dispatch(userUpdateFailure(data.message))
-      }else{
-        dispatch(userUpdateSuccess(data))
-    };
+      if (!res.ok) {
+        dispatch(userUpdateFailure(data.message));
+        setUpdateError(data.message);
+      } else {
+        dispatch(userUpdateSuccess(data));
+        setUpdateSuccess("Profile updated successfull.");
+      }
     } catch (error) {
       dispatch(userUpdateFailure(error.message));
     }
@@ -141,32 +148,58 @@ export default function DashProfile() {
         <TextInput
           type="text"
           id="username"
+          required
           placeholder="username"
-          defaultValue={updatedData.username || currentUser.username}
+          defaultValue={currentUser.username}
           onChange={handleChange}
         />
         <TextInput
           type="email"
           id="email"
+          required
           placeholder="email"
-          defaultValue={updatedData.email || currentUser.email}
+          defaultValue={currentUser.email}
           onChange={handleChange}
         />
-        <span className="cursor-pointer text-xs underline" onClick={()=>setShowPassForm(!showPassForm)}>Change Password</span>
-       {showPassForm && <TextInput
-                 type="password"
-                 id="password"
-                 placeholder="password"
-                 onChange={handleChange}
-               />}
+        <span
+          className="cursor-pointer text-xs underline"
+          onClick={() => setShowPassForm(!showPassForm)}
+        >
+          Change Password
+        </span>
+        {showPassForm && (
+          <TextInput
+            type="password"
+            id="password"
+            placeholder="Password"
+            onChange={handleChange}
+          />
+        )}
         <Button
           disabled={uploadError || isLoading}
           type="submit"
           gradientDuoTone="purpleToBlue"
           outline
         >
-          {isLoading ? <> <Spinner size="sm" /> <span className="pl-3">Updating...</span></> : "Update"}
+          {isLoading ? (
+            <>
+              {" "}
+              <Spinner size="sm" /> <span className="pl-3">Updating...</span>
+            </>
+          ) : (
+            "Update"
+          )}
         </Button>
+        {updateSuccess && (
+          <Alert onDismiss={() => setUpdateSuccess(null)} color="success">
+            {updateSuccess}
+          </Alert>
+        )}
+        {updateError && (
+          <Alert onDismiss={() => setUpdateError(null)} color="failure">
+            {updateError}
+          </Alert>
+        )}
         <div className="flex justify-between mt-4 text-red-500">
           <span className="cursor-pointer">Delete Account</span>
           <span className="cursor-pointer">Sign Out</span>
