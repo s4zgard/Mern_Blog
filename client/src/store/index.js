@@ -20,6 +20,9 @@ import {
   userUpdateStart,
   userUpdateFailure,
   userUpdateSuccess,
+  userDeleteStart,
+  userDeleteFailure,
+  userDeleteSuccess,
 } from "./slices/userSlice";
 
 import { themeReducer, toggleTheme } from "./slices/themSlice";
@@ -60,5 +63,8 @@ export {
   setCurrentPassword,
   setProfilePicture,
   clearForm,
+  userDeleteStart,
+  userDeleteFailure,
+  userDeleteSuccess,
 };
 export const persistor = persistStore(store);

@@ -89,12 +89,7 @@ export default function SignInForm() {
         </Link>
       </div>
       {errorMessage && (
-        <Alert
-          onDismiss={() => setErrorMessage(null)}
-          icon={HiInformationCircle}
-          className="mt-5"
-          color="failure"
-        >
+        <Alert icon={HiInformationCircle} className="mt-5" color="failure">
           {errorMessage}
         </Alert>
       )}

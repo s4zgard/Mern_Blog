@@ -1,4 +1,4 @@
-import { Alert, Button, Spinner, TextInput } from "flowbite-react";
+import { Alert, Button, Modal, Spinner, TextInput } from "flowbite-react";
 import { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -10,15 +10,20 @@ import {
 import { app } from "../firebase";
 import { CircularProgressbar } from "react-circular-progressbar";
 import { GoUpload } from "react-icons/go";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
 import "react-circular-progressbar/dist/styles.css";
 import {
   userUpdateStart,
   userUpdateFailure,
   userUpdateSuccess,
+  userDeleteStart,
+  userDeleteFailure,
+  userDeleteSuccess,
 } from "../store";
 
 export default function DashProfile() {
   const dispatch = useDispatch();
+  const [showModal, setShowModal] = useState(false);
   const { currentUser, isLoading, error } = useSelector((state) => state.user);
   const [showPassForm, setShowPassForm] = useState(false);
   const [image, setImage] = useState(null);
@@ -50,7 +55,23 @@ export default function DashProfile() {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
-
+  const handeDeleteUser = async (e) => {
+    setShowModal(false);
+    try {
+      dispatch(userDeleteStart);
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        dispatch(userDeleteFailure(data.message));
+      } else {
+        dispatch(userDeleteSuccess());
+      }
+    } catch (error) {
+      dispatch(userDeleteFailure(error.message));
+    }
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.username === "" || !formData.email === "") {
@@ -195,16 +216,38 @@ export default function DashProfile() {
             {updateSuccess}
           </Alert>
         )}
+        {error && <Alert color="failure">{error}</Alert>}
         {updateError && (
           <Alert onDismiss={() => setUpdateError(null)} color="failure">
             {updateError}
           </Alert>
         )}
         <div className="flex justify-between mt-4 text-red-500">
-          <span className="cursor-pointer">Delete Account</span>
+          <span className="cursor-pointer" onClick={() => setShowModal(true)}>
+            Delete Account
+          </span>
           <span className="cursor-pointer">Sign Out</span>
         </div>
       </form>
+      <Modal show={showModal} onClose={() => setShowModal(false)}>
+        <Modal.Header />
+        <Modal.Body>
+          <div className="text-center">
+            <HiOutlineExclamationCircle className="h-14 w-14 text-red-400 mb-4 mx-auto dark:text-red-200" />
+            <h3 className="mb-5 text-lg text-red-500 dark:text-red-400">
+              Are you sure you want to delete your account?
+            </h3>
+            <div className="flex gap-4 justify-center">
+              <Button color="failure" onClick={handeDeleteUser}>
+                Yes
+              </Button>
+              <Button color="gray" onClick={() => setShowModal(false)}>
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 }
