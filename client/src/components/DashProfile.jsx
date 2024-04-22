@@ -128,6 +128,24 @@ export default function DashProfile() {
     );
   };
 
+  const handleSignOut = async () => {
+    try {
+      const res = await fetch("/api/user/signout", {
+        method: "POST",
+      });
+      const data = await res.json();
+      if (res.ok) {
+        window.localStorage.clear();
+        window.location.reload();
+      }
+      if (!res.ok) {
+        console.log(data.message);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   return (
     <div className="max-w-lg mx-auto w-full p-3">
       <h1 className="my-8 font-semibold text-center text-3xl">Profile</h1>
@@ -226,7 +244,9 @@ export default function DashProfile() {
           <span className="cursor-pointer" onClick={() => setShowModal(true)}>
             Delete Account
           </span>
-          <span className="cursor-pointer">Sign Out</span>
+          <span className="cursor-pointer" onClick={handleSignOut}>
+            Sign Out
+          </span>
         </div>
       </form>
       <Modal show={showModal} onClose={() => setShowModal(false)}>
