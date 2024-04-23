@@ -58,7 +58,11 @@ export const signin = async (req, res, next) => {
     const { password: uPass, ...rest } = loggedInUser._doc;
 
     const token = jwt.sign(
-      { id: loggedInUser._id, username: loggedInUser.username },
+      {
+        id: loggedInUser._id,
+        username: loggedInUser.username,
+        isAdmin: loggedInUser.isAdmin,
+      },
       process.env.JWTSECRET,
       { expiresIn: "1d" }
     );
@@ -77,7 +81,12 @@ export const google = async (req, res, next) => {
     const user = await User.findOne({ email });
     if (user) {
       const token = jwt.sign(
-        { id: user._id, email: user.email, username: name },
+        {
+          id: user._id,
+          email: user.email,
+          username: name,
+          isAdmin: user.isAdmin,
+        },
         process.env.JWTSECRET,
         { expiresIn: "1d" }
       );
@@ -99,7 +108,12 @@ export const google = async (req, res, next) => {
       });
       await user.save();
       const token = jwt.sign(
-        { id: user._id, email: user.email, username: name },
+        {
+          id: user._id,
+          email: user.email,
+          username: name,
+          isAdmin: user.isAdmin,
+        },
         process.env.JWTSECRET,
         { expiresIn: "1d" }
       );
