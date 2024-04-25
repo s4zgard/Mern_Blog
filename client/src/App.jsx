@@ -3,10 +3,12 @@ import Root from "./pages/Root";
 import About from "./pages/About";
 import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./components/PrivateRoute";
+import AdminRoute from "./components/AdminRoute";
 import Home from "./pages/Home";
 import Projects from "./pages/Projects";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+import CreatePost from "./pages/CreatePost";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +34,15 @@ const router = createBrowserRouter([
               const tab = searchParams.get("tab");
               return tab;
             },
+          },
+          {
+            element: <AdminRoute />,
+            children: [
+              {
+                element: <CreatePost />,
+                path: "/dashboard/create-post",
+              },
+            ],
           },
         ],
       },

@@ -1,6 +1,7 @@
 import { Alert, Button, Modal, Spinner, TextInput } from "flowbite-react";
 import { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 import {
   getDownloadURL,
   getStorage,
@@ -229,6 +230,17 @@ export default function DashProfile() {
             "Update"
           )}
         </Button>
+        {currentUser.isAdmin && (
+          <Link to="create-post">
+            <Button
+              type="button"
+              gradientDuoTone="purpleToPink"
+              className="w-full"
+            >
+              Create Post
+            </Button>
+          </Link>
+        )}
         {updateSuccess && (
           <Alert onDismiss={() => setUpdateSuccess(null)} color="success">
             {updateSuccess}
