@@ -15,14 +15,17 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
+import { useNavigate } from "react-router-dom";
 import { app } from "../firebase";
 
 export default function CreatePost() {
   const [file, setFile] = useState(null);
   const [imageProgress, setImageProgress] = useState(null);
   const [imageError, setImageError] = useState(null);
+  const [publishError, setPublishError] = useState(null);
   const [formData, setFormData] = useState({});
-  console.log(formData);
+  const navigate = useNavigate();
+
   const handleUpload = async () => {
     try {
       if (!file) {
@@ -33,6 +36,7 @@ export default function CreatePost() {
       const fileName = new Date().getTime() + "-" + file.name;
       const storageRef = ref(storage, fileName);
       const uploadTask = uploadBytesResumable(storageRef, file);
+
       uploadTask.on(
         "state_changed",
         (snapshot) => {
@@ -58,10 +62,38 @@ export default function CreatePost() {
       console.log(error);
     }
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!formData.title) return;
+    if (!formData.content) {
+      setPublishError("Please write blog content.");
+      return;
+    }
+    try {
+      const res = await fetch("/api/post/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setPublishError(data.message);
+        return;
+      }
+      if (res.ok) {
+        setPublishError(null);
+        navigate(`/post/${data.slug}`);
+      }
+    } catch (error) {
+      setPublishError("Something went wrong");
+    }
+  };
+
   return (
     <div className="p-3 max-w-3xl min-h-screen mx-auto ">
       <h1 className="text-3xl text-center font-semibold my-7">Create Post</h1>
-      <form className="flex flex-col gap-4">
+      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         <div className="flex flex-col sm:flex-row gap-4 justify-between">
           <TextInput
             type="text"
@@ -70,8 +102,15 @@ export default function CreatePost() {
             placeholder="Title"
             required
             className="flex-1"
+            onChange={(e) =>
+              setFormData({ ...formData, title: e.target.value })
+            }
           />
-          <Select>
+          <Select
+            onChange={(e) =>
+              setFormData({ ...formData, category: e.target.value })
+            }
+          >
             <option value="uncategorized">Select category</option>
             <option value="javascript">Javascript</option>
             <option value="reactjs">ReactJs</option>
@@ -120,10 +159,16 @@ export default function CreatePost() {
           placeholder="Write blog post"
           className="h-72 mb-12 dark:text-gray-400"
           required
+          onChange={(value) => setFormData({ ...formData, content: value })}
         />
         <Button type="submit" gradientDuoTone="purpleToPink">
           Publish
         </Button>
+        {publishError && (
+          <Alert color="failure" onDismiss={() => setPublishError(null)}>
+            {publishError}
+          </Alert>
+        )}
       </form>
     </div>
   );
