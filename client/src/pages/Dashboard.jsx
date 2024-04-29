@@ -1,6 +1,7 @@
 import { useLoaderData } from "react-router-dom";
 import DashSidebar from "../components/DashSidebar";
 import DashProfile from "../components/DashProfile";
+import DashPost from "../components/DashPost";
 
 export default function Dashboard() {
   const tab = useLoaderData();
@@ -11,6 +12,7 @@ export default function Dashboard() {
         <DashSidebar tab={tab} />
       </div>
       {tab === "profile" && <DashProfile />}
+      {tab === "posts" && <DashPost />}
     </div>
   );
 }

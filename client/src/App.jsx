@@ -9,6 +9,7 @@ import Projects from "./pages/Projects";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import CreatePost from "./pages/CreatePost";
+import ShowPost from "./pages/ShowPost";
 
 const router = createBrowserRouter([
   {
@@ -57,6 +58,13 @@ const router = createBrowserRouter([
       {
         element: <SignUp />,
         path: "/sign-up",
+      },
+      {
+        element: <ShowPost />,
+        path: "/post/:slug",
+        loader: ({ params }) => {
+          return params.slug;
+        },
       },
     ],
   },

@@ -63,8 +63,7 @@ export const signin = async (req, res, next) => {
         username: loggedInUser.username,
         isAdmin: loggedInUser.isAdmin,
       },
-      process.env.JWTSECRET,
-      { expiresIn: "1d" }
+      process.env.JWTSECRET
     );
     res
       .status(200)
@@ -87,8 +86,7 @@ export const google = async (req, res, next) => {
           username: name,
           isAdmin: user.isAdmin,
         },
-        process.env.JWTSECRET,
-        { expiresIn: "1d" }
+        process.env.JWTSECRET
       );
       const { password, ...rest } = user._doc;
       res
@@ -114,8 +112,7 @@ export const google = async (req, res, next) => {
           username: name,
           isAdmin: user.isAdmin,
         },
-        process.env.JWTSECRET,
-        { expiresIn: "1d" }
+        process.env.JWTSECRET
       );
       const { password, ...rest } = user._doc;
       res
