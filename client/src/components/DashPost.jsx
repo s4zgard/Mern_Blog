@@ -125,49 +125,52 @@ export default function DashPost() {
       </Table.Cell>
     </Table.Row>
   ));
+  if (isLoading)
+    return (
+      <div className="h-screen mx-auto flex items-center justify-center">
+        <Spinner size="xl" className="h-48 w-48 self-center" />
+      </div>
+    );
+  document.title = "Posts";
   return (
     <>
-      {isLoading ? (
-        <Spinner size="xl" className="w-48 h-48 mx-auto absolute inset-40 " />
-      ) : (
-        <div className="table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-300">
-          {currentUser.isAdmin && posts.length > 0 ? (
-            <>
-              <Table hoverable className="shadow-md">
-                <Table.Head>
-                  <Table.HeadCell>Date Updated</Table.HeadCell>
-                  <Table.HeadCell>Post Image</Table.HeadCell>
-                  <Table.HeadCell>Post Title</Table.HeadCell>
-                  <Table.HeadCell>Post Category</Table.HeadCell>
-                  <Table.HeadCell>Edit</Table.HeadCell>
-                  <Table.HeadCell>Delete</Table.HeadCell>
-                </Table.Head>
-                <Table.Body>{tableData}</Table.Body>
-              </Table>
-              {showMore && (
-                <button
-                  onClick={handleShowMore}
-                  className="py-4 text-teal-500 text-sm self-center w-full"
-                >
-                  Show More
-                </button>
-              )}
-            </>
-          ) : (
-            <div className="flex flex-col items-center justify-center gap-2">
-              <h1 className="text-2xl font-bold">You have no posts.</h1>
-              <Link to="/dashboard/create-post">
-                <Button>Create Post</Button>
-              </Link>
-            </div>
-          )}
-          {error && (
-            <Alert color="failure" onDismiss={() => setError(null)}>
-              {error}
-            </Alert>
-          )}
-        </div>
-      )}
+      <div className="table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-300">
+        {currentUser.isAdmin && posts.length > 0 ? (
+          <>
+            <Table hoverable className="shadow-md">
+              <Table.Head>
+                <Table.HeadCell>Date Updated</Table.HeadCell>
+                <Table.HeadCell>Post Image</Table.HeadCell>
+                <Table.HeadCell>Post Title</Table.HeadCell>
+                <Table.HeadCell>Post Category</Table.HeadCell>
+                <Table.HeadCell>Edit</Table.HeadCell>
+                <Table.HeadCell>Delete</Table.HeadCell>
+              </Table.Head>
+              <Table.Body>{tableData}</Table.Body>
+            </Table>
+            {showMore && (
+              <button
+                onClick={handleShowMore}
+                className="py-4 text-teal-500 text-sm self-center w-full"
+              >
+                Show More
+              </button>
+            )}
+          </>
+        ) : (
+          <div className="flex flex-col items-center justify-center gap-2">
+            <h1 className="text-2xl font-bold">You have no posts.</h1>
+            <Link to="/dashboard/create-post">
+              <Button>Create Post</Button>
+            </Link>
+          </div>
+        )}
+        {error && (
+          <Alert color="failure" onDismiss={() => setError(null)}>
+            {error}
+          </Alert>
+        )}
+      </div>
       <Modal show={showModal} onClose={() => setShowModal(false)}>
         <Modal.Header />
         <Modal.Body>

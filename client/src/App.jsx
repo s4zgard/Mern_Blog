@@ -10,6 +10,7 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import CreatePost from "./pages/CreatePost";
 import ShowPost from "./pages/ShowPost";
+import UpdatePost from "./pages/UpdatePost";
 
 const router = createBrowserRouter([
   {
@@ -42,6 +43,13 @@ const router = createBrowserRouter([
               {
                 element: <CreatePost />,
                 path: "/dashboard/create-post",
+              },
+              {
+                element: <UpdatePost />,
+                path: "/dashboard/update-post/:postId",
+                loader: ({ params }) => {
+                  return params.postId;
+                },
               },
             ],
           },

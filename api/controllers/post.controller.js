@@ -59,6 +59,33 @@ export const getPosts = async (req, res, next) => {
   } catch (error) {}
 };
 
+export const update = async (req, res, next) => {
+  if (req.user.isAdmin && req.user.id === req.params.userId) {
+    if (!req.body.title || !req.body.content) {
+      return next(errorHandler(400, "Fill the required required fields,"));
+    }
+    try {
+      await Post.findByIdAndUpdate(
+        req.params.postId,
+        {
+          $set: {
+            title: req.body.title,
+            content: req.body.content,
+            category: req.body.category,
+            image: req.body.image,
+          },
+        },
+        { new: true }
+      );
+      res.status(200).json("Post updated successfuly.");
+    } catch (error) {
+      next(error);
+    }
+  } else {
+    return next(errorHandler(403, `You are not authorized.`));
+  }
+};
+
 export const deletePost = async (req, res, next) => {
   if (req.user.isAdmin && req.user.id === req.params.userId) {
     try {
