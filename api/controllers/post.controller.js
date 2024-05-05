@@ -59,15 +59,15 @@ export const getPosts = async (req, res, next) => {
   } catch (error) {}
 };
 
-export const show = async (req, res, next) => {
-  const slug = req.params.slug;
-  try {
-    const post = await Post.findOne({ slug });
-    if (!post) {
-      return next(errorHandler(404, `Not found for slug ${slug}`));
+export const deletePost = async (req, res, next) => {
+  if (req.user.isAdmin && req.user.id === req.params.userId) {
+    try {
+      await Post.findByIdAndDelete(req.params.postId);
+      res.status(200).json("Post deleted successfuly.");
+    } catch (error) {
+      next(error);
     }
-    res.status(200).json(post);
-  } catch (error) {
-    next(error);
+  } else {
+    return next(errorHandler(403, `You are not authorized.`));
   }
 };

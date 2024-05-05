@@ -42,8 +42,8 @@ export default function DashSidebar({ tab }) {
               Profile
             </Sidebar.Item>
           </Link>
-          <Link to="/dashboard?tab=posts">
-            {currentUser.isAdmin && (
+          {currentUser.isAdmin && (
+            <Link to="/dashboard?tab=posts">
               <Sidebar.Item
                 active={tab === "posts"}
                 icon={HiDocumentText}
@@ -52,8 +52,8 @@ export default function DashSidebar({ tab }) {
               >
                 Posts
               </Sidebar.Item>
-            )}
-          </Link>
+            </Link>
+          )}
           <Sidebar.Item
             icon={HiArrowSmRight}
             className="cursor-pointer"
