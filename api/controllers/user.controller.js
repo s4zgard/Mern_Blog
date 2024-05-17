@@ -132,3 +132,17 @@ export const getusers = async (req, res, next) => {
     }
   }
 };
+
+export const deleteUserDash = async (req, res, next) => {
+  if (req.user.id !== req.params.adminId) {
+    return next(errorHandler(403, "You are not authorized"));
+  }
+  if (req.user.id === req.params.adminId) {
+    try {
+      await User.findByIdAndDelete(req.params.userId);
+      res.status(200).json({ message: "User deleted successfully." });
+    } catch (error) {
+      next(error);
+    }
+  }
+};

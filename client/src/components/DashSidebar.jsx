@@ -4,6 +4,7 @@ import {
   HiDocument,
   HiDocumentText,
   HiUser,
+  HiUsers,
 } from "react-icons/hi";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -43,16 +44,28 @@ export default function DashSidebar({ tab }) {
             </Sidebar.Item>
           </Link>
           {currentUser.isAdmin && (
-            <Link to="/dashboard?tab=posts">
-              <Sidebar.Item
-                active={tab === "posts"}
-                icon={HiDocumentText}
-                labelColor="dark"
-                as={"div"}
-              >
-                Posts
-              </Sidebar.Item>
-            </Link>
+            <>
+              <Link to="/dashboard?tab=posts">
+                <Sidebar.Item
+                  active={tab === "posts"}
+                  icon={HiDocumentText}
+                  labelColor="dark"
+                  as={"div"}
+                >
+                  Posts
+                </Sidebar.Item>
+              </Link>
+              <Link to="/dashboard?tab=users">
+                <Sidebar.Item
+                  active={tab === "users"}
+                  icon={HiUsers}
+                  labelColor="dark"
+                  as={"div"}
+                >
+                  Users
+                </Sidebar.Item>
+              </Link>
+            </>
           )}
           <Sidebar.Item
             icon={HiArrowSmRight}
