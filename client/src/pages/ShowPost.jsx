@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { useLoaderData } from "react-router-dom";
-import { Spinner } from "flowbite-react";
+import { Link, useLoaderData } from "react-router-dom";
+import { Button, Spinner } from "flowbite-react";
 
 export default function ShowPost() {
   const slug = useLoaderData();
-  const [postData, setPostData] = useState(null);
+  const [post, setPost] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   useEffect(() => {
@@ -14,7 +14,7 @@ export default function ShowPost() {
         const res = await fetch(`/api/post/getposts?slug=${slug}`);
         if (res.ok) {
           const data = await res.json();
-          setPostData(data.post[0]);
+          setPost(data.post[0]);
           setIsLoading(false);
         } else {
           setError(data.message);
@@ -29,17 +29,36 @@ export default function ShowPost() {
   }, [slug]);
   if (isLoading)
     return (
-      <div className="mx-auto h-screen max-w-72 text-center text-3xl">
-        <Spinner size="xl" color="purple" />
+      <div className="mx-auto flex h-screen items-center justify-center text-3xl">
+        <Spinner size="xl" color="purple" className=" w-48 h-48" />
       </div>
     );
-  if (postData?.title) document.title = postData.title;
-  if (!postData) return <h1>Post not found.</h1>;
+  if (post?.title) document.title = post.title;
+  if (!post) return <h1>Post not found.</h1>;
   return (
-    <>
-      <div>
-        <img src={postData.image} />
+    <main className="p-3 flex flex-col min-h-screen mx-auto max-w-6xl">
+      <h1 className="text-3xl mt-10 p-3 mx-auto text-center font-serif max-w-2xl lg:text-4xl">
+        {post.title}
+      </h1>
+      <Link to={`/search?cat=${post.category}`} className="self-center my-5">
+        <Button color="gray" size="xs" pill>
+          {post.category}
+        </Button>
+      </Link>
+
+      <img
+        src={post.image}
+        alt="Hero picture"
+        className="mt-5 max-h-[600px] p-3 w-full object-cover"
+      />
+      <div className="flex justify-between p-3 border-b border-slate-300 mx-auto w-full max-w-2xl text-xs">
+        <span>{new Date(post.createdAt).toLocaleDateString()}</span>
+        <span>{(post.content.length / 1000).toFixed(0)} mins read</span>
       </div>
-    </>
+      <div
+        className="p-3 max-w-2xl mx-auto w-full post-content"
+        dangerouslySetInnerHTML={{ __html: post.content }}
+      />
+    </main>
   );
 }
