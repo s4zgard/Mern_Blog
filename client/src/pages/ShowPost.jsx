@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useLoaderData } from "react-router-dom";
 import { Button, Spinner } from "flowbite-react";
+import CallToAction from "../components/CallToAction";
 
 export default function ShowPost() {
   const slug = useLoaderData();
@@ -59,6 +60,9 @@ export default function ShowPost() {
         className="p-3 max-w-2xl mx-auto w-full post-content"
         dangerouslySetInnerHTML={{ __html: post.content }}
       />
+      <div>
+        <CallToAction />
+      </div>
     </main>
   );
 }

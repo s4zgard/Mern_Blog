@@ -9,6 +9,12 @@ body {
 .ql-editor {
   font-size: 1.05rem;
 }
+.ql-syntax {
+  @apply text-white px-4 py-2 whitespace-pre-wrap bg-slate-900 rounded-lg my-1;
+}
+code {
+  @apply bg-slate-300 text-slate-500 rounded-md p-0.5;
+}
 .post-content p {
   margin-bottom: 0.5rem;
 }
