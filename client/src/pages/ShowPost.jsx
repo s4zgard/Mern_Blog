@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useLoaderData } from "react-router-dom";
 import { Button, Spinner } from "flowbite-react";
 import CallToAction from "../components/CallToAction";
+import Comments from "../components/Comments";
 
 export default function ShowPost() {
   const slug = useLoaderData();
@@ -62,6 +63,9 @@ export default function ShowPost() {
       />
       <div>
         <CallToAction />
+      </div>
+      <div>
+        <Comments postId={post._id} />
       </div>
     </main>
   );

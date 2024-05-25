@@ -11,6 +11,7 @@ import SignUp from "./pages/SignUp";
 import CreatePost from "./pages/CreatePost";
 import ShowPost from "./pages/ShowPost";
 import UpdatePost from "./pages/UpdatePost";
+import ScrollToTop from "./components/ScrollToTop";
 
 const router = createBrowserRouter([
   {
@@ -79,5 +80,11 @@ const router = createBrowserRouter([
 ]);
 
 export default function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <RouterProvider router={router}>
+        <ScrollToTop />
+      </RouterProvider>
+    </>
+  );
 }
