@@ -243,7 +243,7 @@ export default function DBoard() {
                         <img
                           src={post.image}
                           alt="Profile"
-                          className="w-10 h-10 object-cover rounded-full shadow-md dark:shadow-gray-600"
+                          className="w-14 h-10 object-cover rounded-md shadow-md dark:shadow-gray-600"
                         />
                       </Table.Cell>
                       <Table.Cell>{post.title}</Table.Cell>
