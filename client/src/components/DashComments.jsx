@@ -77,8 +77,12 @@ export default function DashComments() {
       );
       if (res.ok) {
         setComments(comments.filter((comment) => comment._id !== commentId));
+        return;
       }
-    } catch (error) {}
+      setError(data.message);
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
   const tableData = comments.map((comment) => (
