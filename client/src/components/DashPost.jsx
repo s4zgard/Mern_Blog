@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { MdEditNote, MdDeleteSweep } from "react-icons/md";
-import { HiOutlineExclamationCircle } from "react-icons/hi";
+import { HiDocumentAdd, HiOutlineExclamationCircle } from "react-icons/hi";
 
 export default function DashPost() {
   const { currentUser } = useSelector((state) => state.user);
@@ -137,6 +137,12 @@ export default function DashPost() {
       <div className="table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-300">
         {currentUser.isAdmin && posts.length > 0 ? (
           <>
+            <Link to="/dashboard/create-post">
+              <Button gradientDuoTone="pinkToOrange" size="xs" className="mb-2">
+                <HiDocumentAdd className="w-5 h-5" />
+                Create Post
+              </Button>
+            </Link>
             <Table hoverable className="shadow-md">
               <Table.Head>
                 <Table.HeadCell>Date Updated</Table.HeadCell>
