@@ -2,6 +2,7 @@ import { isAuthenticated } from "../utils/isAuthenticated.js";
 import {
   create,
   fetch,
+  getcomments,
   like,
   remove,
   update,
@@ -14,4 +15,5 @@ router.get("/fetch/:postId", fetch);
 router.put("/like/:commentId", isAuthenticated, like);
 router.put("/update/:commentId/:userId", isAuthenticated, update);
 router.delete("/remove/:commentId/:userId", isAuthenticated, remove);
+router.get("/getcomments", isAuthenticated, getcomments);
 export default router;

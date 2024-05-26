@@ -71,3 +71,39 @@ export const remove = async (req, res, next) => {
     }
   }
 };
+
+export const getcomments = async (req, res, next) => {
+  if (!req.user.isAdmin) {
+    return next(errorHandler(403, "You are not authorized."));
+  }
+  if (req.user.isAdmin) {
+    try {
+      const startIndex = parseInt(req.query.startIndex) || 0;
+      const limit = parseInt(req.query.limit) || 9;
+      const sortBy = req.query.order === "asc" ? 1 : -1;
+      const data = await Comment.find()
+        .limit(limit)
+        .sort({ createdAt: sortBy })
+        .skip(startIndex);
+
+      const comments = data.map((comment) => {
+        return comment._doc;
+      });
+
+      const totalComments = await Comment.countDocuments();
+      const now = new Date();
+      const lastMonth = new Date(
+        now.getFullYear(),
+        now.getMonth() - 1,
+        now.getDate()
+      );
+
+      const lastMonthComments = await Comment.countDocuments({
+        createdAt: { $gte: lastMonth },
+      });
+      res.status(200).json({ comments, totalComments, lastMonthComments });
+    } catch (error) {
+      next(error);
+    }
+  }
+};
