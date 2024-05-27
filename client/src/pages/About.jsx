@@ -41,7 +41,7 @@ export default function About() {
             to collaborate or discuss potential opportunities.
           </p>
           <a
-            href="https://github.com/s4zgard/Mern-blog"
+            href="https://github.com/s4zgard/Mern_blog"
             target="_blank"
             rel="noopener noreferrer"
             className="text-lg text-teal-600 dark:text-teal-400 font-semibold hover:underline"
