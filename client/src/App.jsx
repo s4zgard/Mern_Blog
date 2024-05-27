@@ -12,6 +12,7 @@ import CreatePost from "./pages/CreatePost";
 import ShowPost from "./pages/ShowPost";
 import UpdatePost from "./pages/UpdatePost";
 import ScrollToTop from "./components/ScrollToTop";
+import Search from "./pages/Search";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       {
         element: <About />,
         path: "/about",
+      },
+      {
+        element: <Search />,
+        path: "/search",
       },
       {
         element: <PrivateRoute />,

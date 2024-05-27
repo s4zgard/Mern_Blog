@@ -27,16 +27,16 @@ export const getPosts = async (req, res, next) => {
   try {
     const startIndex = parseInt(req.query.startIndex) || 0;
     const limit = parseInt(req.query.limit) || 9;
-    const sortBy = req.query.order === "asc" ? 1 : -1;
+    const sortBy = req.query.sort === "asc" ? 1 : -1;
     const post = await Post.find({
       ...(req.query.userId && { userId: req.query.userId }),
       ...(req.query.slug && { slug: req.query.slug }),
       ...(req.query.category && { category: req.query.category }),
       ...(req.query.postId && { _id: req.query.postId }),
-      ...(req.query.serachTerm && {
+      ...(req.query.searchTerm && {
         $or: [
-          { title: { $regex: req.query.serachTerm, $options: "i" } },
-          { content: { $regex: req.query.serachTerm, $options: "i" } },
+          { title: { $regex: req.query.searchTerm, $options: "i" } },
+          { content: { $regex: req.query.searchTerm, $options: "i" } },
         ],
       }),
     })
@@ -55,7 +55,11 @@ export const getPosts = async (req, res, next) => {
       createdAt: { $gte: lastMonth },
     });
 
-    res.status(200).json({ post, postsCount, postCountLastMonth });
+    res.status(200).json({
+      post,
+      postsCount,
+      postCountLastMonth,
+    });
   } catch (error) {}
 };
 

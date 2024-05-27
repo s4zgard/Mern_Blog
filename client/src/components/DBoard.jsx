@@ -211,7 +211,7 @@ export default function DBoard() {
                 })
               ) : (
                 <Table.Row className="font-semibold">
-                  No comments yet.
+                  <Table.Cell colSpan={2}>No comments yet.</Table.Cell>
                 </Table.Row>
               )}
             </Table.Body>
@@ -251,7 +251,9 @@ export default function DBoard() {
                   );
                 })
               ) : (
-                <Table.Row className="font-semibold">No posts yet.</Table.Row>
+                <Table.Row className="font-semibold">
+                  <Table.Cell colSpan={2}>No posts yet.</Table.Cell>
+                </Table.Row>
               )}
             </Table.Body>
           </Table>
