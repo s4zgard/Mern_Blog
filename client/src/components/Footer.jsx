@@ -35,7 +35,9 @@ export default function FooterComp() {
                 <Footer.Link href="https://github.com/s4zgard">
                   Github
                 </Footer.Link>
-                <Footer.Link href="#">Discord</Footer.Link>
+                <Footer.Link href="https://discord.com/users/s4zgard#3619">
+                  Discord
+                </Footer.Link>
               </Footer.LinkGroup>
             </div>
             <div>
