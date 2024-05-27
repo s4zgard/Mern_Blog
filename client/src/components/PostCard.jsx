@@ -7,7 +7,7 @@ export default function PostCard({ post }) {
         <img
           src={post.image}
           alt="post cover"
-          className="h-[160px] w-full  object-cover group-hover:h-[130px] transition-all duration-300 z-20"
+          className="h-[200px] w-full  object-cover group-hover:h-[150px] transition-all duration-300 z-20"
         />
       </Link>
       <div className="p-3 flex flex-col gap-2">

@@ -35,11 +35,10 @@ export default function DBoard() {
         const res = await fetch(`/api/post/getposts?limit=5`);
         const data = await res.json();
         if (res.ok) {
-          setLoading(false);
-
           setPosts(data.post);
           setTotalPosts(data.postsCount);
           setLastMonthPosts(data.postCountLastMonth);
+          setLoading(false);
         }
       } catch (error) {
         setLoading(false);
@@ -52,11 +51,10 @@ export default function DBoard() {
         const res = await fetch(`/api/comment/getcomments`);
         const data = await res.json();
         if (res.ok) {
-          setLoading(false);
-
           setComments(data.comments);
           setTotalComments(data.totalComments);
           setLastMonthComments(data.lastMonthComments);
+          setLoading(false);
         }
       } catch (error) {
         setLoading(false);
@@ -69,11 +67,10 @@ export default function DBoard() {
         const res = await fetch(`/api/user/getusers?limit=5`);
         const data = await res.json();
         if (res.ok) {
-          setLoading(false);
-
           setUsers(data.users);
           setTotalUsers(data.totalUsers);
           setLastMonthUsers(data.lastMonthUsers);
+          setLoading(false);
         }
       } catch (error) {
         setLoading(false);
@@ -168,7 +165,7 @@ export default function DBoard() {
                   return (
                     <Table.Row
                       key={user._id}
-                      className="border-b dark:border-gray-600"
+                      className="border-b dark:border-gray-600 h-10"
                     >
                       <Table.Cell>
                         <img
@@ -203,9 +200,11 @@ export default function DBoard() {
                   return (
                     <Table.Row
                       key={comment._id}
-                      className="border-b dark:border-gray-600"
+                      className="border-b dark:border-gray-600 h-10"
                     >
-                      <Table.Cell>{comment.content}</Table.Cell>
+                      <Table.Cell className="h-10">
+                        {comment.content}
+                      </Table.Cell>
                       <Table.Cell>{comment.likesCount}</Table.Cell>
                     </Table.Row>
                   );
@@ -237,7 +236,7 @@ export default function DBoard() {
                   return (
                     <Table.Row
                       key={post._id}
-                      className="border-b dark:border-gray-600"
+                      className="border-b dark:border-gray-600 h-10"
                     >
                       <Table.Cell>
                         <img
