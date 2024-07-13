@@ -17,6 +17,6 @@
   "scripts": {
     "dev": "nodemon api/index.js",
     "start": "node api/index.js",
-    "build": "yarn && yarn --cwd client && yarn build --cwd client"
+    "build": "yarn && cd client && yarn && yarn build"
   }
 }
